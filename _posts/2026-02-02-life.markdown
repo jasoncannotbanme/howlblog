@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Life"
-date:   2026-01-04 15:29:10 +0530
+date:   2026-05-04 15:29:10 +0000
 categories: jekyll update
 ---
-weirdos.
+I setup a blog page!!!!, its going on vercel cause i hate self hosting. You win Jews.
