@@ -11,7 +11,11 @@ I do plan on revamping this page a little tho.
 
 
 socials 
+
+
 discord: Elnui
+
+
 github: [jasoncannotbanme](https://github.com/jasoncannotbanme)
 
 
