@@ -1,0 +1,29 @@
+# The URL the site will be built for
+base_url = "https://howlblog.vercel.app"
+
+theme = "anpu"
+
+# Site metadata (was title/tagline/description in _config.yml)
+title = "howl's /home of retardation"
+description = "My /home for shitty opinions and ideas im too lazy to commit to."
+
+# Automatically compile the theme's Sass
+compile_sass = true
+
+# Generate an RSS/Atom feed
+generate_feeds = true
+
+# Don't build a client-side search index (keeps things simple)
+build_search_index = false
+
+taxonomies = [
+    { name = "tags", feed = true },
+    { name = "categories", feed = true },
+]
+
+[extra]
+anpu_date_format = "%e %B %Y"
+anpu_menu_links = [
+    { url = "$BASE_URL/about/", name = "About" },
+    { url = "$BASE_URL/categories/", name = "Categories" },
+]

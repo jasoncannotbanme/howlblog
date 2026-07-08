@@ -1,0 +1,8 @@
+# Zola build output
+public/
+
+# Local notes
+notes.markdown
+
+# Drafts stay local until ready (draft = true also keeps them unpublished)
+content/whatiswrongwithpeople.md
