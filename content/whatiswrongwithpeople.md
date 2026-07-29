@@ -6,6 +6,8 @@ draft = false
 [taxonomies]
 categories = ["blog"]
 tags = []
+[extra]
+comments = true
 +++
 
 ## Introduction to hell
