@@ -1,0 +1,161 @@
+<section class="comments" id="comments" data-slug="{{ page.path }}">
+    <h2>Comments</h2>
+    <p class="comments-intro secondary">No accounts, no emails. You get a random name and that's it.</p>
+
+    <ol class="comment-list" id="comment-list">
+        <li class="comment-empty secondary">Loading comments…</li>
+    </ol>
+
+    <form class="comment-form" id="comment-form" hidden>
+        <label class="comment-label" for="comment-body">
+            Commenting as <span class="comment-whoami" id="comment-whoami">a name you get when you post</span>
+        </label>
+        <textarea id="comment-body" name="body" rows="4" maxlength="2000" required
+            placeholder="Say something…"></textarea>
+        <p class="comment-hp" aria-hidden="true">
+            <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </p>
+        <div class="comment-actions">
+            <button type="submit" id="comment-submit">Post</button>
+            <span class="comment-status secondary" id="comment-status" role="status"></span>
+        </div>
+    </form>
+
+    <noscript><p class="secondary">Comments need JavaScript.</p></noscript>
+</section>
+
+<script>
+(function () {
+    var root = document.getElementById("comments");
+    var list = document.getElementById("comment-list");
+    var form = document.getElementById("comment-form");
+    var status = document.getElementById("comment-status");
+    var whoami = document.getElementById("comment-whoami");
+    var submit = document.getElementById("comment-submit");
+    var slug = root.getAttribute("data-slug");
+
+    // Stable per-browser id. The server maps it to a random name, so the same
+    // person keeps one handle without ever identifying themselves.
+    function visitorId() {
+        var id = null;
+        try { id = localStorage.getItem("howl_visitor"); } catch (e) { /* private mode */ }
+        if (!id) {
+            id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2))
+                .replace(/[^a-z0-9-]/gi, "");
+            try { localStorage.setItem("howl_visitor", id); } catch (e) { /* ignore */ }
+        }
+        return id;
+    }
+
+    function rememberName(name) {
+        try { localStorage.setItem("howl_name", name); } catch (e) { /* ignore */ }
+        whoami.textContent = name;
+    }
+
+    function when(ts) {
+        var d = new Date(ts);
+        return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) +
+            " at " + d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function commentNode(c) {
+        var li = document.createElement("li");
+        li.className = "comment";
+
+        var meta = document.createElement("div");
+        meta.className = "comment-meta";
+
+        var name = document.createElement("span");
+        name.className = "comment-name";
+        name.textContent = c.name;
+
+        var time = document.createElement("time");
+        time.className = "comment-time secondary";
+        time.dateTime = new Date(c.ts).toISOString();
+        time.textContent = when(c.ts);
+
+        meta.appendChild(name);
+        meta.appendChild(time);
+
+        // textContent, never innerHTML — comment bodies are untrusted.
+        var body = document.createElement("p");
+        body.className = "comment-body";
+        body.textContent = c.body;
+
+        li.appendChild(meta);
+        li.appendChild(body);
+        return li;
+    }
+
+    function placeholder(message) {
+        list.textContent = "";
+        var li = document.createElement("li");
+        li.className = "comment-empty secondary";
+        li.textContent = message;
+        list.appendChild(li);
+    }
+
+    function render(comments) {
+        if (!comments.length) return placeholder("Nobody has said anything yet.");
+        list.textContent = "";
+        comments.forEach(function (c) { list.appendChild(commentNode(c)); });
+    }
+
+    fetch("/api/comments?slug=" + encodeURIComponent(slug))
+        .then(function (res) {
+            if (res.status === 503) throw new Error("Comments are not switched on yet.");
+            if (!res.ok) throw new Error("Could not load comments.");
+            return res.json();
+        })
+        .then(function (data) {
+            render(data.comments || []);
+            form.hidden = false;
+            var saved = null;
+            try { saved = localStorage.getItem("howl_name"); } catch (e) { /* ignore */ }
+            if (saved) whoami.textContent = saved;
+        })
+        .catch(function (err) {
+            placeholder(err.message);
+        });
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var body = form.elements.body.value.trim();
+        if (!body) return;
+
+        submit.disabled = true;
+        status.textContent = "Posting…";
+
+        fetch("/api/comments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                slug: slug,
+                body: body,
+                visitor: visitorId(),
+                website: form.elements.website.value
+            })
+        })
+            .then(function (res) {
+                return res.json().then(function (data) {
+                    if (!res.ok) throw new Error(data.error || "Could not post that.");
+                    return data;
+                });
+            })
+            .then(function (data) {
+                form.elements.body.value = "";
+                status.textContent = "";
+                if (!data.comment) return;
+                rememberName(data.comment.name);
+                if (list.querySelector(".comment-empty")) list.textContent = "";
+                list.appendChild(commentNode(data.comment));
+            })
+            .catch(function (err) {
+                status.textContent = err.message;
+            })
+            .then(function () {
+                submit.disabled = false;
+            });
+    });
+})();
+</script>

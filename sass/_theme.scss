@@ -51,6 +51,26 @@ $accent-dark: #ffffff;
   .footnote-definition sup {
     color: $secondary;
   }
+
+  .comments {
+    border-top: thin solid $tertiary;
+  }
+
+  .comment + .comment {
+    border-top: thin solid $tertiary;
+  }
+
+  .comment-form textarea,
+  .comment-form button {
+    color: $foreground;
+    background-color: $background;
+    border: 1px solid $secondary;
+  }
+
+  .comment-form button:hover:not(:disabled) {
+    color: $background;
+    background-color: $foreground;
+  }
 }
 
 @mixin dark-theme {
@@ -96,6 +116,26 @@ $accent-dark: #ffffff;
 
   .footnote-definition sup {
     color: $secondary-dark;
+  }
+
+  .comments {
+    border-top: thin solid $tertiary-dark;
+  }
+
+  .comment + .comment {
+    border-top: thin solid $tertiary-dark;
+  }
+
+  .comment-form textarea,
+  .comment-form button {
+    color: $foreground-dark;
+    background-color: $background-dark;
+    border: 1px solid $secondary-dark;
+  }
+
+  .comment-form button:hover:not(:disabled) {
+    color: $background-dark;
+    background-color: $foreground-dark;
   }
 }
 

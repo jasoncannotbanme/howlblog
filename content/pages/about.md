@@ -2,6 +2,9 @@
 title = "About"
 path = "about"
 template = "page.html"
+
+[extra]
+comments = false
 +++
 
 Hi, im howl.
