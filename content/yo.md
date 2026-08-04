@@ -1,11 +1,11 @@
 +++
 title = "All the passion, none the effort"
-date = 2026-07-17
+date = 2026-08-04
 draft = false
 
 [taxonomies]
 categories = ["blog"]
-tags = [selfhelp]
+tags = ["selfhelp"]
 [extra]
 comments = true
 +++
