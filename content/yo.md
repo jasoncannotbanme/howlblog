@@ -10,6 +10,7 @@ tags = ["selfhelp"]
 comments = true
 +++
 
+<<<<<<< HEAD
 It's been a while since i touched this website, and for a reason. I haven't exactly been enjoying my life.
 To be very fair im not depressed, nor am i looking for validation but deep inside, I know something aint right.
 
@@ -42,3 +43,5 @@ I wanna do so many things but i dont know where to start. I've done everything b
 Today's 4th august 2026; 5:17 IST. I'm working on entropy right now, I hope whenever i read it again, I have something that i can be proud about.
 
 Cest la vie.
+=======
+>>>>>>> 17b9602 (what)
