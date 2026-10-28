@@ -5,7 +5,7 @@ draft = false
 
 [taxonomies]
 categories = ["blog"]
-tags = ["selfhelp"]
+tags = ["AI"]
 [extra]
 comments = true
 +++
